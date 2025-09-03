@@ -1,1 +1,27 @@
+input_folder = "/content/drive/MyDrive/Collab/Portfolio/Image_recognition/Agricultural-crops"
+output_folder = "/content/drive/MyDrive/Collab/Portfolio/Image_recognition/output_folder"
 
+split_ratio = (0.8, 0.1, 0.1)
+splitfolders.ratio(
+    input_folder,
+    output=output_folder,
+    seed=42,
+    ratio=split_ratio
+)
+
+img_size = (224, 224)
+batch_size = 32
+
+#data augmentation to expose the model to a wider variety of image variations
+#helps the model to generalize better to unseen data
+
+train_datagen = ImageDataGenerator(
+    preprocessing_function = preprocess_input,
+    rotation_range=20,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    shear_range=0.2,
+    zoom_range=0.2,
+    horizontal_flip=True,
+    fill_mode='nearest'
+)
