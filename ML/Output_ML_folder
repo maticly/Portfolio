@@ -1,2 +1,8 @@
-#test, validation, and training sets:
-https://drive.google.com/drive/folders/16NLBRQlF_2thtIvkpcR9V3_XcIjToZFE?usp=sharing
+## 📁 test, validation, and training sets:
+🔗 https://drive.google.com/drive/folders/16NLBRQlF_2thtIvkpcR9V3_XcIjToZFE?usp=sharing
+
+├── train/ 
+├── val/ 
+└── test/
+
+Make sure your Google Drive is mounted if you're using Google Colab.
