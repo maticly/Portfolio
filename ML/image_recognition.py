@@ -1,0 +1,144 @@
+input_folder = "/path"
+output_folder = "/path"
+
+split_ratio = (0.8, 0.1, 0.1)
+splitfolders.ratio(
+    input_folder,
+    output=output_folder,
+    seed=42,
+    ratio=split_ratio
+)
+
+img_size = (224, 224)
+batch_size = 32
+
+#data augmentation to expose the model to a wider variety of image variations
+#helps the model to generalize better to unseen data
+
+train_datagen = ImageDataGenerator(
+    preprocessing_function = preprocess_input,
+    rotation_range=20,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    shear_range=0.2,
+    zoom_range=0.2,
+    horizontal_flip=True,
+    fill_mode='nearest'
+)
+
+#preprocessing test and validation data with ResNet50
+test_datagen = ImageDataGenerator(
+    preprocessing_function = preprocess_input
+)
+
+valid_datagen = ImageDataGenerator(
+    preprocessing_function = preprocess_input
+)
+
+#paths for the train, validation, and test directories within the output folder
+train_dir = "/content/drive/MyDrive/Collab/Portfolio/Image_recognition/output_folder/train" # Corrected path
+val_dir = "/content/drive/MyDrive/Collab/Portfolio/Image_recognition/output_folder/val"
+test_dir = "/content/drive/MyDrive/Collab/Portfolio/Image_recognition/output_folder/test" # Corrected path
+
+train_generator = train_datagen.flow_from_directory(
+    train_dir,
+    target_size=img_size,
+    batch_size=batch_size,
+    class_mode='categorical' #for multiclass classification
+)
+
+val_generator = valid_datagen.flow_from_directory(
+    val_dir,
+    target_size=img_size,
+    batch_size=batch_size,
+    class_mode='categorical'
+)
+
+test_generator = test_datagen.flow_from_directory(
+    test_dir,
+    target_size=img_size,
+    batch_size=batch_size,
+    class_mode='categorical', # Added a comma here
+    shuffle=False #keep the order for consistent evaluation
+
+import random
+import matplotlib.pyplot as plt
+
+images, labels = next(val_generator)
+
+idx = random.randint(0, images.shape[0] - 1)
+
+plt.imshow(images[idx])
+plt.show()
+
+base_model = ResNet50(
+    weights="imagenet",
+    include_top=False, #remove the image pre-classification, bc I want to train model myself
+    input_shape=(img_size[0], img_size[1], 3)
+)
+
+#freeze the base
+base_model.trainable = False
+
+model = models.Sequential([
+    base_model,
+    layers.GlobalAveragePooling2D(),
+    layers.Dense(256, activation='relu'),
+    layers.Dropout(0.5),
+    layers.Dense(train_generator.num_classes, activation='softmax')
+])
+
+model.compile(optimizer='adam',
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
+model.fit(train_generator, epochs=100, validation_data=val_generator)
+
+test_loss, test_accuracy = loaded_model.evaluate(test_generator)
+
+print(f"Test accuracy: {test_accuracy}")
+
+loaded_model.summary()
+
+class_names = {
+    0: "wheat",
+    1: "vigna-radiata(Mung)",
+    2: "tomato",
+    3: "Tobacco-plant",
+    4: "tea",
+    5: "sunflower",
+    6: "sugarcane",
+    7: "soyabean",
+    8: "rice",
+    9: "pineapple",
+    10: "Pearl_millet(bajra)",
+    11: "papaya",
+    12: "Olive-tree",
+    13: "mustard-oil",
+    14: "maize",
+    15: "Lemon",
+    16: "jute",
+    17: "jowar",
+    18: "gram",
+    19: "Fox_nut(Makhana)",
+    20: "almond",
+    21: "Cucumber",
+    22: "cardamom",
+    23: "cotton",
+    24: "Coffee-plant",
+    25: "Cherry",
+    26: "coconut",
+    27: "banana",
+    28: "clove",
+    29: "chilli"
+}
+
+class_names = {v:k for k, v in train_generator.class_indices.items()}
+
+def predict_img(image, loaded_model):
+    test_img=cv2.imread(image)
+    test_img=cv2.resize(test_img, (224,224))
+    test_img=np.expand_dims(test_img, axis=0)
+    result=loaded_model.predict(test_img)
+    result=np.argmax(result)
+    return class_names[result]
