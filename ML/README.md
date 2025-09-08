@@ -2,7 +2,7 @@
 
 To run the image recognition model, you'll need the dataset stored on Google Drive.
 
-🔗 [Download the dataset]((https://drive.google.com/drive/folders/1T66tlNMRkInr8mQoce6KJIUOwSvBn7Fj?usp=sharing))
+🔗 [Download the dataset](https://drive.google.com/drive/folders/1T66tlNMRkInr8mQoce6KJIUOwSvBn7Fj?usp=sharing)
 
 After downloading, place the files in the following structure:
 ├── train/ 
@@ -12,7 +12,7 @@ After downloading, place the files in the following structure:
 
 Make sure your Google Drive is mounted if you're using Google Colab.
 
-#Source: https://www.kaggle.com/datasets/mdwaquarazam/agricultural-crops-image-classification/data
+Source: https://www.kaggle.com/datasets/mdwaquarazam/agricultural-crops-image-classification/data
 
 # Agricultural Crop Image Classification
 
