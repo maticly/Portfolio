@@ -1,4 +1,4 @@
-##**👋 Hi, I'm Mati**
+## **👋 Hi, I'm Mati**
 
 🚀 **Boston University Graduate Student** | Aspiring **Human-Centric Gen-AI & Decision Inteligance Specialist**  
 🔎 Focused on **data systems, business optimization, and AI-powered decision intelligence**  
